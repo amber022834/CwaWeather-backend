@@ -144,6 +144,8 @@
 // // 取得高雄天氣預報
 // app.get("/api/weather/Taipei", getTaipeiWeather);
 
+
+
 // // Error handling middleware
 // app.use((err, req, res, next) => {
 //   console.error(err.stack);
@@ -183,8 +185,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 /**
- * 取得天氣預報
- * 前端可透過 query 參數 ?city=城市名稱 呼叫
+ * 通用的天氣預報函式
+ * 可根據城市名稱取得天氣資料
  */
 const getWeatherByCity = async (req, res) => {
   try {
@@ -253,13 +255,13 @@ const getWeatherByCity = async (req, res) => {
             forecast.weather = value.parameterName;
             break;
           case "PoP":
-            forecast.rain = value.parameterName + "%";
+            forecast.rain = value.parameterName;
             break;
           case "MinT":
-            forecast.minTemp = value.parameterName + "°C";
+            forecast.minTemp = value.parameterName;
             break;
           case "MaxT":
-            forecast.maxTemp = value.parameterName + "°C";
+            forecast.maxTemp = value.parameterName;
             break;
           case "CI":
             forecast.comfort = value.parameterName;
@@ -291,7 +293,7 @@ const getWeatherByCity = async (req, res) => {
 
     res.status(500).json({
       error: "伺服器錯誤",
-      message: "無法取得天氣資料，請稍後再試",
+      message: "無法取得天氣資料,請稍後再試",
     });
   }
 };
@@ -301,7 +303,10 @@ app.get("/", (req, res) => {
   res.json({
     message: "歡迎使用 CWA 天氣預報 API",
     endpoints: {
-      weather: "/api/weather?city=城市名稱",
+      taipei: "/api/weather/taipei",
+      taichung: "/api/weather/taichung",
+      tainan: "/api/weather/tainan",
+      dynamic: "/api/weather?city=城市名稱",
       health: "/api/health",
     },
   });
@@ -314,6 +319,7 @@ app.get("/api/health", (req, res) => {
 // 動態取得指定城市天氣
 app.get("/api/weather", getWeatherByCity);
 
+// 台北天氣
 app.get("/api/weather/taipei", async (req, res) => {
   req.query.city = "臺北市";
   return getWeatherByCity(req, res);
@@ -348,6 +354,6 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 伺服器運行已運作`);
+  console.log(`🚀 伺服器運行於 PORT ${PORT}`);
   console.log(`📍 環境: ${process.env.NODE_ENV || "development"}`);
 });
