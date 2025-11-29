@@ -37,7 +37,7 @@ const getKaohsiungWeather = async (req, res) => {
       {
         params: {
           Authorization: CWA_API_KEY,
-          locationName: "宜蘭縣",
+          locationName: "高雄市",
         },
       }
     );
@@ -162,5 +162,5 @@ app.use((req, res) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 伺服器運行已運作`);
-  console.log(`📍 環境: ${process.env.NODE_ENV || "development"}`);
+  console.log(`📍 環境: ${process.env.NODE_ENV || 3000}`);
 });
